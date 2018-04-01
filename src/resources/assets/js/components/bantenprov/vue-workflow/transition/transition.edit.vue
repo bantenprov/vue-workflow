@@ -13,20 +13,8 @@
     </div>
 
     <div class="card-body">
-      <vue-form class="form-horizontal form-validation" :state="state" @submit.prevent="onSubmit">
-        <div class="form-row"><div class="col-md">
-            <validate tag="div">
-							<input class="form-control" v-model="model.name" name="old_name" type="hidden">
-
-              <input class="form-control" v-model="model.name" name="name" type="text" placeholder="Name">
-
-              <field-messages name="name" show="$invalid && $submitted" class="text-danger">
-                <small class="form-text text-success">Looks good!</small>
-              </field-messages>
-            </validate>
-          </div>
-        </div>
-        <div class="form-row mt-4">
+      <vue-form class="form-horizontal form-validation" :state="state" @submit.prevent="onSubmit">        
+        <div class="form-row">
           <div class="col-md">
             <validate tag="div">              
               <input class="form-control" v-model="model.label" required autofocus name="label" type="text" placeholder="Label">
@@ -38,6 +26,48 @@
             </validate>
           </div>
         </div>
+
+        <div class="form-row mt-4">
+					<div class="col-md">
+						<validate tag="div">
+						<label for="workflow">Workflow</label>
+						<v-select @input="onChange" name="workflow" v-model="model.workflow" :options="workflow" class="mb-4"></v-select>
+
+						<field-messages name="workflow" show="$invalid && $submitted" class="text-danger">
+							<small class="form-text text-success">Looks good!</small>
+							<small class="form-text text-danger" slot="required">Workflow is a required field</small>
+						</field-messages>
+						</validate>
+					</div>
+				</div>   
+
+        <div class="form-row mt-4">
+					<div class="col-md">
+						<validate tag="div">
+						<label for="from">From</label>
+						<v-select name="from" v-model="model.from" :options="from" class="mb-4"></v-select>
+
+						<field-messages name="from" show="$invalid && $submitted" class="text-danger">
+							<small class="form-text text-success">Looks good!</small>
+							<small class="form-text text-danger" slot="required">From is a required field</small>
+						</field-messages>
+						</validate>
+					</div>
+				</div>    
+
+        <div class="form-row mt-4">
+					<div class="col-md">
+						<validate tag="div">
+						<label for="to">To</label>
+						<v-select name="to" v-model="model.to" :options="to" class="mb-4"></v-select>
+
+						<field-messages name="to" show="$invalid && $submitted" class="text-danger">
+							<small class="form-text text-success">Looks good!</small>
+							<small class="form-text text-danger" slot="required">to is a required field</small>
+						</field-messages>
+						</validate>
+					</div>
+				</div>
 
         <div class="form-row mt-4">
           <div class="col-md">
@@ -67,11 +97,24 @@
 <script>
 export default {
   mounted() {
+    axios.get('vue-workflow/transition/create')
+    .then(response => {      
+      response.data.forEach(element => {
+        this.workflow.push(element);
+      });
+    })
+    .catch(function(response) {
+      alert('Break');
+    }),
+
     axios.get('vue-workflow/transition/' + this.$route.params.id + '/edit')
       .then(response => {
         if (response.data.status == true) {
           this.model.label = response.data.label;
           this.model.old_name = response.data.name;
+          this.model.workflow = response.data.get_workflow;
+          this.model.to = response.data.state_to;
+          this.model.from = response.data.state_from;
           this.model.name = response.data.name;
           this.model.description = response.data.message;
         } else {
@@ -89,8 +132,14 @@ export default {
       model: {
         label: "",
         name: "",
-        description: ""
-      }
+        description: "",
+        workflow: "",
+        from: "",
+        to: ""
+      },
+      workflow: [],
+      from: [],
+      to: [],
     }
   },
   methods: {
@@ -107,16 +156,35 @@ export default {
           break;
       }      
     },
+    onChange() {
+      this.from = [];
+      this.to = []; 
+      axios.get('vue-workflow/transition/create/'+this.model.workflow.id+'/get-state')
+      .then(response => {      
+        response.data.forEach(element => {
+          //console.log(this.model.workflow.id);
+          this.from.push(element);
+          this.to.push(element);
+        });
+      })
+      .catch(function(response) {
+        alert('Break');
+      });
+      
+    },
     onSubmit: function() {
       let app = this;
       if (this.state.$invalid) {
         return;
       } else {
         axios.put('vue-workflow/transition/' + this.$route.params.id + '/update', {
+            name: this.model.from.label +'-to-'+this.model.to.label,
+            old_name: this.model.from.label +'-to-'+this.model.to.label,
             label: this.model.label,
-            name: this.model.name,
-            description: this.model.description,
-            old_name: this.model.old_name
+            workflow_id: this.model.workflow.id,
+            from: this.model.from.id,
+            to: this.model.to.id,
+            message: this.model.description
           })
           .then(response => {
             if (response.data.status == true) {              
