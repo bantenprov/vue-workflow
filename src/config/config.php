@@ -13,6 +13,10 @@ return [
     */
 
     'key' => 'value',
-    'WORKFLOW_HISTORY' => ''
+    'WORKFLOW_HISTORY' => '',
+    'content_type' => [
+        ['id' => 4,'label' => 'Workflow'],
+        ['id' => 5,'label' => 'Pendaftaran'],
+    ]
 
 ];
