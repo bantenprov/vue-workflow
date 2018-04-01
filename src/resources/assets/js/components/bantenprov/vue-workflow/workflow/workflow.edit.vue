@@ -22,7 +22,7 @@
 
               <field-messages name="name" show="$invalid && $submitted" class="text-danger">
                 <small class="form-text text-success">Looks good!</small>
-                <small class="form-text text-danger" slot="required">Label is a required field</small>
+                <small class="form-text text-danger" slot="required">Name is a required field</small>
               </field-messages>
             </validate>
           </div>                            
