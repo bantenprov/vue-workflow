@@ -46,12 +46,16 @@ class VueWorkflowCommand extends Command
             File::makeDirectory(base_path().'/app/Http/Controllers/Traits');
             if(!File::exists(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php')){
                 File::put(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php',File::get(__DIR__.'/../../stubs/WorkflowConditionTrait.stub'));
+
+                $this->info('Publishing complete');
             }else{
                 $this->error('File WorkflowConditionTrait.php already exist');
             }
         }else{
             if(!File::exists(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php')){
                 File::put(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php',File::get(__DIR__.'/../../stubs/WorkflowConditionTrait.stub'));
+                
+                $this->info('Publishing complete');
             }else{
                 $this->error('File WorkflowConditionTrait.php already exist');
             }
