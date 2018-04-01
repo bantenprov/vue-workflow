@@ -80,14 +80,8 @@ class WorkflowController extends Controller
      * @return json
      */
     public function create()
-    {
-        $content_type = [
-            ['id' => 1,'label' => 'Posting'], 
-            ['id' => 2,'label' => 'Posting1'],
-            ['id' => 3,'label' => 'SopOnline'],
-            ['id' => 4,'label' => 'Workflow'],
-            ['id' => 5,'label' => 'Pendaftaran'],
-        ];
+    {        
+        $content_type = config('vue-workflow.content_type');
         
         return response()->json($content_type);
     }
