@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers\Traits;
+
+
+trait WorkflowConditionTrait
+{
+
+    public $workflow_condition = true;
+
+    public function availableStateCondition()
+    {
+        
+        return true;
+
+    }
+
+}

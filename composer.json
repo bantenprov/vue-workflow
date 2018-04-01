@@ -1,21 +1,16 @@
 {
     "name": "bantenprov/vue-workflow",
-    "description": "Manage workflow using vuejs",
+    "description": "The VueWorkflow package",
     "authors": [
         {
             "name": "bantenprov",
-            "email": "developer.bantenprov@gmail.com"
+            "email": "developer.bantenprov@gmai.com"
         }
     ],
-    "license": "MIT",
-    "support": {
-      "source": "https://github.com/bantenprov/vue-workflow,",
-      "issues": "https://github.com/bantenprov/vue-workflow/issues",
-      "wiki": "https://github.com/bantenprov/vue-workflow/wiki"
-    },
     "require": {
         "php": ">=5.6.4",
-        "illuminate/support": "5.4.*"
+        "illuminate/support": "5.4.*",
+        "emadadly/laravel-uuid": "^1.2"
     },
     "autoload": {
         "files": [
@@ -25,5 +20,5 @@
             "Bantenprov\\VueWorkflow\\": "src"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
