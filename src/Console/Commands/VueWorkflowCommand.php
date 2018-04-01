@@ -16,14 +16,14 @@ class VueWorkflowCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bantenprov:vue-workflow';
+    protected $signature = 'vue-workflow:publish-trait';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Demo command for Bantenprov\VueWorkflow package';
+    protected $description = 'Publish Trait for Bantenprov\VueWorkflow package';
 
     /**
      * Create a new command instance.
@@ -41,14 +41,20 @@ class VueWorkflowCommand extends Command
      * @return mixed
      */
     public function handle()
-    {
-        //$file = File::get(base_path().'/composer.json');
-        //$this->info(config('app'));
-        print_r(config('app')['providers']);
-        print_r(            
-            (in_array('Bantenprov\ProdukHukum\ProdukHukumServiceProvider',config('app')['providers'])) ? 'true' : 'false'
-        );
-        //$this->info(get_class());
-        //$this->info('Welcome to command for Bantenprov\VueWorkflow package');
+    {        
+        if(!File::exists(base_path().'/app/Http/Controllers/Traits')){
+            File::makeDirectory(base_path().'/app/Http/Controllers/Traits');
+            if(!File::exists(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php')){
+                File::put(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php',File::get(__DIR__.'/../../stubs/WorkflowConditionTrait.stub'));
+            }else{
+                $this->error('File WorkflowConditionTrait.php already exist');
+            }
+        }else{
+            if(!File::exists(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php')){
+                File::put(base_path().'/app/Http/Controllers/Traits/WorkflowConditionTrait.php',File::get(__DIR__.'/../../stubs/WorkflowConditionTrait.stub'));
+            }else{
+                $this->error('File WorkflowConditionTrait.php already exist');
+            }
+        }
     }
 }
