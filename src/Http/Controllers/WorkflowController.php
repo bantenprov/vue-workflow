@@ -38,7 +38,8 @@ class WorkflowController extends Controller
      * @return json
      */
     public function index(Request $req)
-    {            
+    {     
+             
         // $transition = Transition::where('name','propose-to-propose')->where('workflow_id','19')->first();
         // dd($transition->id);
         //dd($this->getRequest($req->input('sort')));  
