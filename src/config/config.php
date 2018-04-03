@@ -15,8 +15,8 @@ return [
     'key' => 'value',
     'WORKFLOW_HISTORY' => '',
     'content_type' => [
-        ['id' => 4,'label' => 'Workflow'],
-        ['id' => 5,'label' => 'Pendaftaran'],
+        ['id' => 1,'label' => 'Workflow'],
+        ['id' => 2,'label' => 'Pendaftaran'],
     ]
 
 ];
