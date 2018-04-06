@@ -501,6 +501,7 @@ class Department extends Model
 
 untuk pengujian isi secara manual pada table departments ,
 
+```
 +----+---------+-------------+--------------+
 | id | user_id | kegiatan_id |     name     |
 +----+---------+-------------+--------------+
@@ -508,6 +509,6 @@ untuk pengujian isi secara manual pada table departments ,
 +----+---------+-------------+--------------+
 |  2 |    2    |      2      | Department 2 |
 +----+---------+-------------+--------------+
-
+```
 
 
