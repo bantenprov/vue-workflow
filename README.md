@@ -12,7 +12,7 @@
 
 Manage workfow using vuejs
 
-# `[!]` untuk saat ini module workflow hanya berjalan di module pendaftaran ( test version )
+# `ℹ️` untuk saat ini module workflow hanya berjalan di module pendaftaran ( test version )
 
 ## Install via composer :
 
@@ -285,7 +285,7 @@ props :
     ]
 
 ```
-`[!]` jika content_type lebih dari satu
+`ℹ️` jika content_type lebih dari satu
 key (`id`) menggunakan angka yang berurutan 
 
 contoh untuk penggunaan content type lebih dari satu
