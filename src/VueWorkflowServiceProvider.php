@@ -137,7 +137,7 @@ class VueWorkflowServiceProvider extends ServiceProvider
 
         $this->publishes([
             $packageAssetsPath => resource_path('assets'),
-        ], 'vue-workflow-public');
+        ], 'vue-workflow-assets');
     }
 
     /**
