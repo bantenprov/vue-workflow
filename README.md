@@ -511,4 +511,36 @@ untuk pengujian isi secara manual pada table departments ,
 +----+---------+-------------+--------------+
 ```
 
+setelah itu edit file `app/Traits/WorkflowConditionTrait.php`
 
+```php
+<?php
+
+namespace App\Http\Controllers\Traits;
+use App\Department;
+
+/**
+ * Trait WorkflowConditionTrait
+ * @package App\Http\Controllers\Traits
+ */
+trait WorkflowConditionTrait
+{    
+
+    /**
+     * @return bool
+     */
+
+    public function guard__propose_to_review($content_id){
+
+        $check = \Bantenprov\Pendaftaran\Models\Bantenprov\Pendaftaran\Pendaftaran::find($content_id);
+        $department = Department::where('kegiatan_id',$check->kegiatan_id)->first();
+        if($department->user_id == \Auth::user()->id){
+            return true;
+        }else{
+            return false;
+        }        
+        
+    }
+
+}
+```
