@@ -465,4 +465,48 @@ public function update(Request $request, $id)
 
 ```
 
+### Untuk melakukan pengujian
+
+```bash
+
+$ php artisan make:model Department -m
+
+```
+
+Edit file `databases/miggrations/timestap_create_departments_table.php`
+
+```php
+
+Schema::create('departments', function (Blueprint $table) {
+    $table->increments('id');
+    $table->integer('user_id');
+    $table->integer('kegiatan_id');
+    $table->string('name');
+    $table->timestamps();
+});
+
+```
+
+Edit file `app/Department.php`
+
+```php
+
+class Department extends Model
+{
+    protected $fillable = ['user_id', 'kegiatan_id', 'name'];
+    
+}
+
+```
+
+untuk pengujian isi secara manual pada table departments ,
+
++----+---------+-------------+----------------+
+| id | user_id | kegiatan_id |      name      |
++----+---------+-------------+----------------+
+| 1  | 1       | 1           | Department 1   |
+| 2  | 2       | 2           | Department 2   |
++----+---------+-------------+----------------+
+
+
 
