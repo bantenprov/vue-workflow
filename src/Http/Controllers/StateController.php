@@ -13,7 +13,7 @@
     /**
      * [Class] StateController
      */
-    class StateController{
+    class StateController extends Controller{
 
         protected $stateModel;
         protected $workflowModel;

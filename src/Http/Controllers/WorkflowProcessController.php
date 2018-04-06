@@ -30,6 +30,15 @@ class WorkflowProcessController extends Controller
     protected $transitionModel;
     protected $workflowTypeModel;
 
+    /**
+     * WorkflowProcessController constructor.
+     * @param State $state
+     * @param Workflow $workflow
+     * @param WorkflowType $workflowType
+     * @param TransitionState $transitionState
+     * @param Transition $transition
+     * @param History $history
+     */
     public function __construct(State $state, Workflow $workflow, WorkflowType $workflowType, TransitionState $transitionState, Transition $transition, History $history){        
 
         $this->wokflowModel = $workflow;
@@ -47,9 +56,18 @@ class WorkflowProcessController extends Controller
 
     }
 
+    /**
+     * @param $content_type
+     * @param $content_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function availableState($content_type,$content_id)
-    {        
-                
+    {      
+        // $call_func = "guard__".str_replace('-', '_', $func);
+        // $checkCondition = $this->$call_func();
+        // dd($func);
+        //dd(call_user_func("test_call_func"));
+        
         $workflow = WorkflowType::where('content_type', $content_type)->first();
 
         if(!$workflow){
@@ -91,9 +109,11 @@ class WorkflowProcessController extends Controller
                     if(!empty($transition->vueGuard->permission_id)){
                         $permission = \App\Permission::find($transition->vueGuard->permission_id);
                         if( (\Auth::user()->hasPermission($permission->name)) ){
-                            if($this->availableStateCondition()){
+                            // if($checkCondition){
                                 array_push($state_response,$state);
-                            }                            
+                            // }else{
+                                // array_set($state,'permission',0);
+                            // }                          
                         }
                         array_set($state,'permission',$transition->vueGuard->permission_id);
                         
@@ -128,9 +148,15 @@ class WorkflowProcessController extends Controller
 
     }
 
+    /**
+     * @param Request $req
+     * @param $content_type
+     * @param $content_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllHistoryThisContent(Request $req, $content_type, $content_id){
 
-        $response;
+        $response = array();
 
         $param = explode('|',$req->get('sort'));
 
@@ -181,8 +207,27 @@ class WorkflowProcessController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @param $content_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function changeState(Request $request, $content_id)
     {
+        $from   = $this->stateModel->find($request->from_state)->name;
+        $to     = $this->stateModel->find($request->to_state)->name;
+        $func = $from.'-to-'.$to;
+
+        $call_func = "guard__".str_replace('-', '_', $func);
+        $checkCondition = $this->$call_func($content_id);
+
+        //return response()->json($checkCondition);
+
+        if(!$checkCondition){
+            $response['message'] = 'tidak mempunyai akses untuk ini.';
+            return response()->json($response);
+        }
+
         $validator = Validator::make($request->all(), [
             'message' => 'required',
         ]);
@@ -206,9 +251,7 @@ class WorkflowProcessController extends Controller
         }        
 
         return response()->json($response);
-    }    
-
-
-
+    }   
+    
 
 }

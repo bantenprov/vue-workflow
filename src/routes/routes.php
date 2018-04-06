@@ -151,7 +151,7 @@ Route::group(['prefix' => 'vue-workflow', 'middleware' => ['web','auth:api']], f
     Route::delete('/workflow/{id}/destroy','Bantenprov\VueWorkflow\Http\Controllers\WorkflowController@destroy')->name('workflow.destroy');
 
 
-    Route::get('/workflow-process/{content_type}/{content_id}','Bantenprov\VueWorkflow\Http\Controllers\WorkflowProcessController@availableState')->name('workflow.process');
+    Route::get('/workflow-process/process/{content_type}/{content_id}','Bantenprov\VueWorkflow\Http\Controllers\WorkflowProcessController@availableState')->name('workflow.process');
 
     Route::post('/workflow-process/change-state/{content_id}','Bantenprov\VueWorkflow\Http\Controllers\WorkflowProcessController@changeState')->name('workflow.changeState');
 

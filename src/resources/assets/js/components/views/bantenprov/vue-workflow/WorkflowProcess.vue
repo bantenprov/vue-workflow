@@ -177,12 +177,12 @@ export default {
             
         }
     },
-    mounted(){
+    mounted(){        
         var content_id = window.location.href.split('/');
         //console.log(content_id.slice(-1)[0]);
         this.model.entity = content_id.slice(-1)[0];
         //console.log(template)
-        axios.get("/vue-workflow/workflow-process/"+this.contentType+"/"+content_id.slice(-1)[0])
+        axios.get("/vue-workflow/workflow-process/process/"+this.contentType+"/"+content_id.slice(-1)[0])
         .then((response) => {
             //console.log(response);            
 
@@ -210,7 +210,7 @@ export default {
             //console.log(this.model.current_state )
             
         })
-        
+                
     },
     methods:{
         back() {
@@ -235,7 +235,7 @@ export default {
         },
 
         onSubmit(arg){
-            let app = this;
+            let app = this;               
             
             /**
             * 

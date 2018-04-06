@@ -19,11 +19,18 @@ use Bantenprov\VueWorkflow\Http\Traits\WorkflowTrait;
  */
 class WorkflowController extends Controller
 {
+
     use WorkflowTrait;
     
     protected $workflowModel;
     protected $workflowTypeModel;
 
+    /**
+     * WorkflowController constructor.
+     * @param Request $request
+     * @param Workflow $workflow
+     * @param WorkflowType $workflowType
+     */
     public function __construct(Request $request, Workflow $workflow, WorkflowType $workflowType){
         $this->workflowModel        = $workflow;
         $this->workflowTypeModel    = $workflowType; 
@@ -32,10 +39,8 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] index
      * @param Request $req
-     * 
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $req)
     {     
@@ -56,7 +61,7 @@ class WorkflowController extends Controller
             
         // }
         // dd();
-        $response;
+        $response = array();
 
         $param = explode('|',$req->get('sort'));
 
@@ -75,10 +80,7 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] create
-     * @param Request $req
-     * 
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      */
     public function create()
     {        
@@ -88,10 +90,8 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] store
      * @param Request $req
-     * 
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $req)
     {
@@ -120,10 +120,8 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] show
      * @param $id
-     * 
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -145,10 +143,8 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] edit
      * @param $id
-     * 
-     * @return json
+     * @return \Illuminate\Http\JsonResponse
      */
     public function edit($id)
     {        
@@ -160,10 +156,9 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] update
      * @param $id
-     * 
-     * @return json
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update($id, Request $request)
     {      
@@ -190,13 +185,12 @@ class WorkflowController extends Controller
         
         return response()->json($response);
     }
-    
+
 
     /**
-     * [Function] storeWorkflow
      * @param Request $req
-     * 
-     * @return json
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function storeWorkflow(Request $req, $id)
     {
@@ -210,10 +204,9 @@ class WorkflowController extends Controller
     }
 
     /**
-     * [Function] destroy
-     * @param Request $req
-     * 
-     * @return json
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
