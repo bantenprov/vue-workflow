@@ -19,7 +19,7 @@ Manage workfow using vuejs
 $ composer require bantenprov/vue-workflow:dev-master
 ```
 
-## Module ini membutuhkan `vue-guard`
+## Module ini membutuhkan `vue-guard` dan `vue-trust`
 
 ### install `vue guard` dan `vue trust`:
 ```bash
