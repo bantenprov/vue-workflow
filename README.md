@@ -12,6 +12,7 @@
 
 Manage workfow using vuejs
 
+# [!] untuk saat ini module workflow hanya berjalan di module pendaftaran ( test version )
 
 ## Install via composer :
 
@@ -216,6 +217,13 @@ Vue.component('workflow-process', WorkflowProcess);
 Copy code dibawah ke component vue.
 pada contoh di bawah ini digunakan pada component `Pendaftaran.show.vue` module `Pendaftaran`
 
+Component workflow :
+
+`<workflow-process content-type="ContentType"></workflow-process>`
+
+props :
+- content-type : Nama Model yang digunakan oleh module
+
 ```javascript
 
 <template>
@@ -265,6 +273,29 @@ pada contoh di bawah ini digunakan pada component `Pendaftaran.show.vue` module 
     </div>
   </div>
 </template>
+
+```
+
+### Edit `config/vue-workflow.php`
+
+```php
+
+'content_type' => [        
+        ['id' => 1,'label' => 'Pendaftaran'],
+    ]
+
+```
+[!] jika content_type lebih dari satu
+key (`id`) menggunakan angka yang berurutan 
+
+contoh untuk penggunaan content type lebih dari satu
+
+```php
+
+'content_type' => [        
+        ['id' => 1,'label' => 'Pendaftaran'],
+        ['id' => 2,'label' => 'Siswa'],
+    ]
 
 ```
 
