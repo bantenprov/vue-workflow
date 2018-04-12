@@ -31,7 +31,7 @@
         /**
          * [Function] index
          * @param Request $req
-         * 
+         *
          * @return json
          */
         public function index(Request $request)
@@ -48,18 +48,18 @@
             //     if($req->get('sort') == ''){
             //         $response = $this->stateModel->paginate(10);
             //     }else{
-            //         $response = $this->stateModel->orderBy($param[0], $param[1])->paginate(10);     
-            //     }                
+            //         $response = $this->stateModel->orderBy($param[0], $param[1])->paginate(10);
+            //     }
             // }
 
             if (request()->has('sort')) {
                 list($sortCol, $sortDir) = explode('|', request()->sort);
-    
+
                 $query = $this->stateModel->orderBy($sortCol, $sortDir);
             } else {
                 $query = $this->stateModel->orderBy('id', 'asc');
             }
-    
+
             if ($request->exists('filter')) {
                 $query->where(function($q) use($request) {
                     $value = "%{$request->filter}%";
@@ -67,24 +67,24 @@
                         ->orWhere('description', 'like', $value);
                 });
             }
-    
+
             $perPage = request()->has('per_page') ? (int) request()->per_page : null;
             $response = $query->paginate($perPage);
-            
-            foreach($response as $workflow){            
-                array_set($response->data, 'workflow_id', $workflow->workflow->label);           
+
+            foreach($response as $workflow){
+                array_set($response->data, 'workflow_id', $workflow->workflow->label);
             }
 
-            
+
 
             return response()->json($response);
-            
+
         }
 
         /**
          * [Function] create
-         * @param 
-         * 
+         * @param
+         *
          * @return json
          */
         public function create(){
@@ -97,7 +97,7 @@
             //         'id' => $workflow->workflow->id,
             //         'label' => $workflow->workflow->label
             //     ];
-                
+
             // }
             $workflows =  $this->workflowModel->all();
 
@@ -109,7 +109,7 @@
         /**
          * [Function] store
          * @param Request $req
-         * 
+         *
          * @return json
          */
         public function store(Request $req)
@@ -118,7 +118,7 @@
             $request['name']            = $req->name;
             $request['description']     = $req->description;
             $request['workflow_id']     = $req->workflow_id;
-            $request['status']          = 1;            
+            $request['status']          = 1;
 
             $check = $this->stateModel->where('name',$req->name)->whereNull('deleted_at')->count();
 
@@ -137,36 +137,37 @@
                     $response['message']    = 'success add new state';
                     $response['status']     = true;
                     $this->stateModel->create($request);
-                }                
+                }
             }else{
                 $response['message']    = 'success add new state';
                 $response['status']     = true;
                 $this->stateModel->create($request);
             }
 
-            
+
 
             return response()->json($response);
         }
-        
+
         /**
          * [Function] edit
          * @param $id
-         * 
+         *
          * @return json
          */
         public function edit($id)
         {
             $response = $this->stateModel->findOrFail($id);
+            $response['workflow'] = $response->workflow;
             $response['status'] = true;
             return response()->json($response);
         }
-        
+
         /**
          * [Function] update
          * @param Request $req
          * @param $id
-         * 
+         *
          * @return json
          */
         public function update(Request $req,$id)
@@ -174,8 +175,8 @@
             $request['label']           = $req->label;
             $request['name']            = $req->name;
             $request['description']     = $req->description;
-            $request['status']          = 1;            
-            
+            $request['status']          = 1;
+
             $check = $this->stateModel->where('name',$req->name)->whereNull('deleted_at')->count();
 
             if($req->old_name == $req->name){
@@ -191,7 +192,7 @@
                     'description'   => 'required',
                 ]);
             }
-            
+
 
             if($validator->fails()){
                 if($check > 0){
@@ -201,22 +202,22 @@
                     $response['message']    = 'success add new state';
                     $response['status']     = true;
                     $this->stateModel->findOrFail($id)->update($request);
-                }                
+                }
             }else{
                 $response['message']    = 'success add new state';
                 $response['status']     = true;
                 $this->stateModel->findOrFail($id)->update($request);
             }
 
-            
+
 
             return response()->json($response);
         }
-        
+
         /**
          * [Function] destroy
          * @param Request $req
-         * 
+         *
          * @return json
          */
         public function destroy($id)

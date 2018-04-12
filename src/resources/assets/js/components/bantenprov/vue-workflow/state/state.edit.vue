@@ -28,7 +28,7 @@
         </div>
         <div class="form-row mt-4">
           <div class="col-md">
-            <validate tag="div">              
+            <validate tag="div">
               <input class="form-control" v-model="model.label" required autofocus name="label" type="text" placeholder="Label">
 
               <field-messages name="label" show="$invalid && $submitted" class="text-danger">
@@ -38,6 +38,20 @@
             </validate>
           </div>
         </div>
+
+        <div class="form-row mt-4">
+					<div class="col-md">
+						<validate tag="div">
+						<label for="workflow">Workflow</label>
+						<v-select name="workflow" v-model="model.workflow" :options="workflow" class="mb-4"></v-select>
+
+						<field-messages name="workflow" show="$invalid && $submitted" class="text-danger">
+							<small class="form-text text-success">Looks good!</small>
+							<small class="form-text text-danger" slot="required">Label is a required field</small>
+						</field-messages>
+						</validate>
+					</div>
+				</div>
 
         <div class="form-row mt-4">
           <div class="col-md">
@@ -66,13 +80,14 @@
 
 <script>
 export default {
-  mounted() {         
+  mounted() {
     axios.get('vue-workflow/state/' + this.$route.params.id + '/edit')
       .then(response => {
         if (response.data.status == true) {
           this.model.label = response.data.label;
           this.model.old_name = response.data.name;
           this.model.name = response.data.name;
+          this.model.workflow = response.data.workflow.label;
           this.model.description = response.data.description;
         } else {
           alert('Failed');
@@ -82,6 +97,14 @@ export default {
         alert('Break');
         window.location.href = '#/admin/group-egovernment';
       });
+
+      axios.get('vue-workflow/state/create')
+      .then(response => {
+          this.workflow = response.data;
+      })
+      .catch(function(response) {
+        alert('Break');
+      });
   },
   data() {
     return {
@@ -89,8 +112,10 @@ export default {
       model: {
         label: "",
         name: "",
+        workflow: "",
         description: ""
-      }
+      },
+      workflow: []
     }
   },
   methods: {
@@ -100,12 +125,12 @@ export default {
           miniToastr.success(message, title);
           break;
         case 'error':
-          miniToastr.error(message, title);          
+          miniToastr.error(message, title);
           break;
         case 'info':
-          miniToastr.info(message, title);     
+          miniToastr.info(message, title);
           break;
-      }      
+      }
     },
     onSubmit: function() {
       let app = this;
@@ -119,9 +144,9 @@ export default {
             old_name: this.model.old_name
           })
           .then(response => {
-            if (response.data.status == true) {              
+            if (response.data.status == true) {
                 app.toast_message('success','update success',response.data.message);
-                app.back();              
+                app.back();
             } else {
               app.toast_message('error','update failed',response.data.message);
             }
@@ -133,12 +158,12 @@ export default {
     },
     reset() {
       axios.get('/vue-workflow/state/' + this.$route.params.id + '/edit')
-        .then(response => {            
+        .then(response => {
           if (response.data.status == true) {
             this.model.label = response.data.label;
             this.model.name = response.data.name;
             this.model.description = response.data.description;
-            
+
           } else {
             alert('Failed');
           }
