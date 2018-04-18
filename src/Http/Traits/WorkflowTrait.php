@@ -5,29 +5,29 @@
     use Bantenprov\VueWorkflow\Models\History;
     use Bantenprov\VueWorkflow\Models\TransitionState;
     use Bantenprov\VueWorkflow\Models\Transition;
-    
+
 
     /**
      * Workflow trait
      */
     trait WorkflowTrait
-    {        
+    {
 
         public function insertWithWorkflow($class, $datas)
         {
             // if(in_array('label|asc',$request)){
-            //     return 'work!!';                
+            //     return 'work!!';
             // }
             //dd($request);
             //$class->create($datas);
             $workflow = WorkflowType::where('content_type', class_basename($class));
-            
+
             if($workflow->count() > 0){
                 $get = $class->create($datas);
                 //$class->find($get->id)->delete();
-                
+
                 $transition = Transition::where('name','propose-to-propose')->where('workflow_id',$workflow->first()->workflow_id)->first();
-                
+
                 $this->storeHistory(
                     class_basename($class),
                     $get->id,
@@ -36,11 +36,11 @@
                     $transition->from,
                     $transition->to,
                     \Auth::user()->id
-                );     
+                );
             }else{
                 $class->create($datas);
             }
-            
+
         }
 
         public function storeHistory($content_type, $content_id, $workflow_id, $workflow_transition_id, $from_state, $to_state, $user_id, $message = '')
@@ -91,4 +91,3 @@
 
 
     }
-    
