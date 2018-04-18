@@ -511,7 +511,7 @@ untuk pengujian isi secara manual pada table departments ,
 +----+---------+-------------+--------------+
 ```
 
-setelah itu edit file `app/Traits/WorkflowConditionTrait.php`
+setelah itu edit file `app/Http/Controllers/Traits/WorkflowConditionTrait.php`
 
 ```php
 <?php
