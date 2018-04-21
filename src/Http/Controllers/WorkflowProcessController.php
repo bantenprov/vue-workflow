@@ -39,7 +39,7 @@ class WorkflowProcessController extends Controller
      * @param Transition $transition
      * @param History $history
      */
-    public function __construct(State $state, Workflow $workflow, WorkflowType $workflowType, TransitionState $transitionState, Transition $transition, History $history){        
+    public function __construct(State $state, Workflow $workflow, WorkflowType $workflowType, TransitionState $transitionState, Transition $transition, History $history){
 
         $this->wokflowModel = $workflow;
         $this->stateModel = $state;
@@ -62,12 +62,12 @@ class WorkflowProcessController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function availableState($content_type,$content_id)
-    {      
+    {
         // $call_func = "guard__".str_replace('-', '_', $func);
         // $checkCondition = $this->$call_func();
         // dd($func);
         //dd(call_user_func("test_call_func"));
-        
+
         $workflow = WorkflowType::where('content_type', $content_type)->first();
 
         if(!$workflow){
@@ -76,7 +76,8 @@ class WorkflowProcessController extends Controller
                 ]);
         }
 
-        $history = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->first();
+        $history = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('id','desc')->first();
+        // dd($history);
 
         if(!$history){
             return response()->json([
@@ -93,7 +94,7 @@ class WorkflowProcessController extends Controller
         $transition_state = TransitionState::where('history_id',$history->id)->orderBy('created_at','desc')->first();
 
         $transitions = Transition::where('from',$transition_state->current_state)->get();
-        
+
         $states = State::where('workflow_id',$history->workflow_id)->get();
 
         $current_state = State::find($transition_state->current_state);
@@ -102,7 +103,7 @@ class WorkflowProcessController extends Controller
 
         foreach($transitions as $transition)
         {
-            
+
             foreach($states as $state)
             {
                 if($state->id == $transition->to && $state->id != $transition_state->current_state){
@@ -113,13 +114,13 @@ class WorkflowProcessController extends Controller
                                 array_push($state_response,$state);
                             // }else{
                                 // array_set($state,'permission',0);
-                            // }                          
+                            // }
                         }
                         array_set($state,'permission',$transition->vueGuard->permission_id);
-                        
+
                     }else{
                         array_set($state,'permission',0);
-                    }                    
+                    }
                 }
             }
         }
@@ -216,9 +217,11 @@ class WorkflowProcessController extends Controller
     {
         $from   = $this->stateModel->find($request->from_state)->name;
         $to     = $this->stateModel->find($request->to_state)->name;
+        // $func = $from.'-to-'.$to;
         $func = $from.'-to-'.$to;
 
         $call_func = "guard__".str_replace('-', '_', $func);
+        // dd($call_func);
         $checkCondition = $this->$call_func($content_id);
 
         //return response()->json($checkCondition);
@@ -248,10 +251,10 @@ class WorkflowProcessController extends Controller
             );
             $response['status'] = true;
             $response['message'] = 'success';
-        }        
+        }
 
         return response()->json($response);
-    }   
-    
+    }
+
 
 }
