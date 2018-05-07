@@ -286,7 +286,7 @@ props :
 
 ```
 `ℹ️` jika content_type lebih dari satu
-key (`id`) menggunakan angka yang berurutan 
+key (`id`) menggunakan angka yang berurutan
 
 contoh untuk penggunaan content type lebih dari satu
 
@@ -352,12 +352,12 @@ public function store(Request $request)
         if ($check > 0) {
             $response['message'] = 'Failed, label or user already exists';
         } else {
-            /* 
+            /*
               $pendaftaran->kegiatan_id = $request->input('kegiatan_id');
               $pendaftaran->user_id = $request->input('user_id');
               $pendaftaran->label = $request->input('label');
               $pendaftaran->description = $request->input('description');                
-              $pendaftaran->save(); 
+              $pendaftaran->save();
             */
 
             /* Ganti dengan code di bawah ini */
@@ -367,12 +367,12 @@ public function store(Request $request)
         }
     } else {
 
-        /* 
+        /*
           $pendaftaran->kegiatan_id = $request->input('kegiatan_id');
           $pendaftaran->user_id = $request->input('user_id');
           $pendaftaran->label = $request->input('label');
           $pendaftaran->description = $request->input('description');        
-          $pendaftaran->save(); 
+          $pendaftaran->save();
         */
 
         /* Ganti dengan code di bawah ini */
@@ -411,42 +411,42 @@ public function update(Request $request, $id)
                 array_push($message, $error_get);
             }                
         }   
-        
+
         $get_request = $this->pendaftaran->find($id);
-        
+
         $check_label = $this->pendaftaran->where('id','!=', $id)->where('label', $request->label);
 
         $check_user = $this->pendaftaran->where('id','!=', $id)->where('user_id', $request->user_id);
 
         if($check_label->count() > 0 || $check_user->count() > 0){
-            $response['message'] = implode("\n",$message); 
+            $response['message'] = implode("\n",$message);
         }else{
-            /* 
+            /*
               $pendaftaran->label = $request->input('label');
               $pendaftaran->description = $request->input('description');
               $pendaftaran->kegiatan_id = $request->input('kegiatan_id');
               $pendaftaran->user_id = $request->input('user_id');
-              $pendaftaran->save(); 
+              $pendaftaran->save();
 
               $response['message'] = 'success';
             */
 
             /* Ganti dengan code dibawah ini */
-            
+
             $update = $this->updateWithWorkflow($this->pendaftaran->find($id), $id, $request->all());
 
             $response['message'] = $update['message'];
         }
-        
-                    
+
+
     }else{
 
-        /* 
+        /*
           $pendaftaran->label = $request->input('label');
           $pendaftaran->description = $request->input('description');
           $pendaftaran->kegiatan_id = $request->input('kegiatan_id');
           $pendaftaran->user_id = $request->input('user_id');
-          $pendaftaran->save(); 
+          $pendaftaran->save();
 
           $response['message'] = 'success';
         */
@@ -454,7 +454,7 @@ public function update(Request $request, $id)
         /* Ganti dengan code dibawah ini */
 
         $update = $this->updateWithWorkflow($this->pendaftaran->find($id), $id, $request->all());
-        
+
         $response['message'] = $update['message'];
     }
 
@@ -494,7 +494,7 @@ Edit file `app/Department.php`
 class Department extends Model
 {
     protected $fillable = ['user_id', 'kegiatan_id', 'name'];
-    
+
 }
 
 ```
@@ -535,11 +535,17 @@ trait WorkflowConditionTrait
         $check = \Bantenprov\Pendaftaran\Models\Bantenprov\Pendaftaran\Pendaftaran::find($content_id);
         $department = Department::where('kegiatan_id',$check->kegiatan_id)->first();
         if($department->user_id == \Auth::user()->id){
-            return true;
+              return [
+                  'error' => true,
+                  'message' => 'Success update state.'
+              ];
         }else{
-            return false;
+              return [
+                  'error' => true,
+                  'message' => 'tidak mempunyai akses untuk ini.'
+              ];
         }        
-        
+
     }
 
 }
