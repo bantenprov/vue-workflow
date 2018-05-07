@@ -76,8 +76,7 @@ class WorkflowProcessController extends Controller
                 ]);
         }
 
-        $history = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('id','desc')->first();
-        // dd($history);
+        $history = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->first();
 
         if(!$history){
             return response()->json([
@@ -217,17 +216,15 @@ class WorkflowProcessController extends Controller
     {
         $from   = $this->stateModel->find($request->from_state)->name;
         $to     = $this->stateModel->find($request->to_state)->name;
-        // $func = $from.'-to-'.$to;
         $func = $from.'-to-'.$to;
 
         $call_func = "guard__".str_replace('-', '_', $func);
-        // dd($call_func);
         $checkCondition = $this->$call_func($content_id);
 
         //return response()->json($checkCondition);
 
-        if(!$checkCondition){
-            $response['message'] = 'tidak mempunyai akses untuk ini.';
+        if($checkCondition['error'] == true){
+            $response['message'] = $checkCondition['message'];
             return response()->json($response);
         }
 
@@ -250,7 +247,7 @@ class WorkflowProcessController extends Controller
                 $request->message
             );
             $response['status'] = true;
-            $response['message'] = 'success';
+            $response['message'] = $checkCondition['message'];
         }
 
         return response()->json($response);
