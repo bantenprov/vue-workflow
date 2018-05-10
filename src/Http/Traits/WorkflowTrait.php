@@ -13,24 +13,25 @@
     trait WorkflowTrait
     {
 
-        public function insertWithWorkflow($class, $datas)
+        public function insertWithWorkflow($class, $datas, $method_type = 'create', $entity_id = null)
         {
-            // if(in_array('label|asc',$request)){
-            //     return 'work!!';
-            // }
-            //dd($request);
-            //$class->create($datas);
             $workflow = WorkflowType::where('content_type', class_basename($class));
 
             if($workflow->count() > 0){
-                $get = $class->create($datas);
-                //$class->find($get->id)->delete();
+
+                if($method_type == 'update' && !is_null($entity_id)){
+                    $get = $class->$method_type($datas);
+                    $content_id = $entity_id;
+                }else{
+                    $get = $class->$method_type($datas);
+                    $content_id = $get->id;
+                }
 
                 $transition = Transition::where('name','propose-to-propose')->where('workflow_id',$workflow->first()->workflow_id)->first();
 
                 $this->storeHistory(
                     class_basename($class),
-                    $get->id,
+                    $content_id,
                     $workflow->first()->workflow_id,
                     $transition->id,
                     $transition->from,
@@ -83,11 +84,6 @@
 
             return $response;
         }
-
-        // public function workflowExecute($op, $datas)
-        // {
-
-        // }
 
 
     }

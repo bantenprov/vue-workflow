@@ -43,7 +43,6 @@ class WorkflowProcessController extends Controller
 
         $this->wokflowModel = $workflow;
         $this->stateModel = $state;
-        // $this->historyModel = config('vue-workflow.WORKFLOW_HISTORY');
         $this->historyModel = $history;
         $this->transitionStateModel = $transitionState;
         $this->transitionModel = $transition;
@@ -63,10 +62,6 @@ class WorkflowProcessController extends Controller
      */
     public function availableState($content_type,$content_id)
     {
-        // $call_func = "guard__".str_replace('-', '_', $func);
-        // $checkCondition = $this->$call_func();
-        // dd($func);
-        //dd(call_user_func("test_call_func"));
 
         $workflow = WorkflowType::where('content_type', $content_type)->first();
 
@@ -77,6 +72,7 @@ class WorkflowProcessController extends Controller
         }
 
         $history = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->first();
+
 
         if(!$history){
             return response()->json([
@@ -109,11 +105,8 @@ class WorkflowProcessController extends Controller
                     if(!empty($transition->vueGuard->permission_id)){
                         $permission = \App\Permission::find($transition->vueGuard->permission_id);
                         if( (\Auth::user()->hasPermission($permission->name)) ){
-                            // if($checkCondition){
+                            
                                 array_push($state_response,$state);
-                            // }else{
-                                // array_set($state,'permission',0);
-                            // }
                         }
                         array_set($state,'permission',$transition->vueGuard->permission_id);
 
@@ -163,6 +156,8 @@ class WorkflowProcessController extends Controller
         $workflow = WorkflowType::where('content_type', $content_type)->first();
 
         $histories = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->paginate(10);
+
+        dd($this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->get());
 
         if($req->get('filter') != ''){
             $search = "%{$req->get('filter')}%";
