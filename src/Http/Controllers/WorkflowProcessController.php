@@ -105,7 +105,7 @@ class WorkflowProcessController extends Controller
                     if(!empty($transition->vueGuard->permission_id)){
                         $permission = \App\Permission::find($transition->vueGuard->permission_id);
                         if( (\Auth::user()->hasPermission($permission->name)) ){
-                            
+
                                 array_push($state_response,$state);
                         }
                         array_set($state,'permission',$transition->vueGuard->permission_id);
@@ -156,8 +156,6 @@ class WorkflowProcessController extends Controller
         $workflow = WorkflowType::where('content_type', $content_type)->first();
 
         $histories = $this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->paginate(10);
-
-        dd($this->historyModel->where('workflow_id',$workflow->workflow_id)->where('content_id',$content_id)->orderBy('created_at','desc')->get());
 
         if($req->get('filter') != ''){
             $search = "%{$req->get('filter')}%";
